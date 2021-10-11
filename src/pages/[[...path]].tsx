@@ -57,13 +57,13 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 
     return {
       paths,
-      fallback: process.env.EXPORT_MODE ? false : 'blocking',
+      fallback: false,
     };
   }
 
   return {
     paths: [],
-    fallback: 'blocking',
+    fallback: false,
   };
 };
 
