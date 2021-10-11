@@ -73,6 +73,8 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const props = await sitecorePagePropsFactory.create(context);
 
+  console.log('----------------EXECUTE GET STATIC PROPS----------------', context);
+
   return {
     props,
     // Next.js will attempt to re-generate the page:
