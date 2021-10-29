@@ -119,12 +119,12 @@ export class EditingRenderMiddleware {
       // Extract data from EE payload
       const editingData = extractEditingData(req);
 
-      console.log('1111 - EDITING DATA:', editingData);
+      debug.experienceEditor('1111 - EDITING DATA:' + editingData);
 
       // Resolve server URL
       const serverUrl = this.resolveServerUrl(req);
 
-      console.log('2222 - SERVER URL', serverUrl);
+      debug.experienceEditor('2222 - SERVER URL' + serverUrl);
 
       // Stash for use later on (i.e. within getStatic/ServerSideProps).
       // This ultimately gets stored on disk (using our EditingDataDiskCache) for compatibility with Vercel Serverless Functions.
@@ -132,7 +132,7 @@ export class EditingRenderMiddleware {
       // https://nextjs.org/docs/advanced-features/preview-mode#previewdata-size-limits)
       const previewData = await this.editingDataService.setEditingData(editingData, serverUrl);
 
-      console.log('3333 - PREVIEW DATA:', previewData);
+      debug.experienceEditor('3333 - PREVIEW DATA:' + previewData);
 
       // Enable Next.js Preview Mode, passing our preview data (i.e. editingData cache key)
       res.setPreviewData(previewData);
@@ -144,7 +144,7 @@ export class EditingRenderMiddleware {
       // Note timestamp effectively disables caching the request in Axios (no amount of cache headers seemed to do it)
       const requestUrl = this.resolvePageUrl(serverUrl, editingData.path);
 
-      console.log('4444 REQUEST URL:', requestUrl);
+      debug.experienceEditor('4444 REQUEST URL:' + requestUrl);
 
       debug.experienceEditor('fetching page route for %s', editingData.path);
       const pageRes = await this.dataFetcher.get<string>(`${requestUrl}?timestamp=${Date.now()}`, {
@@ -153,7 +153,7 @@ export class EditingRenderMiddleware {
         },
       });
 
-      console.log('5555', pageRes);
+      debug.experienceEditor('5555' + pageRes);
       let html = pageRes.data;
       if (!html || html.length === 0) {
         throw new Error(`Failed to render html for ${requestUrl}`);
