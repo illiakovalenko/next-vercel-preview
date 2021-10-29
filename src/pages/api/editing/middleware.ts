@@ -179,13 +179,17 @@ export class EditingRenderMiddleware {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.log(
         'REQUEST ERROR----',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (error as any).request.code,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (error as any).request.statusCode
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.log(
         'RESPONSE ERROR----',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (error as any).response.code,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (error as any).response.statusCode
       );
 
