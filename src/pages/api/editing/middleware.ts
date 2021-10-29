@@ -180,8 +180,17 @@ export class EditingRenderMiddleware {
       console.log(
         'RESPONSE ERROR----',
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error as any).response
+        (error as any).response.statusMessage,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error as any).response.status
       );
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((error as any).response.statusMessage === 'Not Found') {
+        return res.status(200).json({
+          html: `<html><body>${error}</body></html>`,
+        });
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((error as any).response || (error as any).request) {
