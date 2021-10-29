@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextApiRequest, NextApiResponse } from 'next';
 import { STATIC_PROPS_ID, SERVER_PROPS_ID } from 'next/constants';
 import { debug } from '@sitecore-jss/sitecore-jss';
@@ -177,16 +178,20 @@ export class EditingRenderMiddleware {
       res.status(200).json(body);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      // console.log(
-      //   'RESPONSE ERROR----',
-      //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      //   (error as any).response.statusMessage,
-      //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      //   (error as any).response.status
-      // );
+      console.log(
+        'RESPONSE ERROR----',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error as any).response.statusMessage,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error as any).response.status
+      );
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((error as any).response.status === 404) {
+      if (
+        (error as any).response.status === 404 ||
+        (error as any).response.status == 404 ||
+        (error as any).response.statusMessage === 'Not Found'
+      ) {
         return res.status(200).json({
           html: `<html><body>${error}</body></html>`,
         });
