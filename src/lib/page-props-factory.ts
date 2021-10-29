@@ -74,17 +74,11 @@ export class SitecorePagePropsFactory {
        * Preview mode
        */
       // If we're in preview (editing) mode, use data already sent along with the editing request
-      let data;
+      const data = await editingDataService.getEditingData(context.previewData).catch((err) => {
+        console.log('HANDLED ERROR:', err);
 
-      try {
-        data = await editingDataService.getEditingData(context.previewData).catch((err) => {
-          console.log('HANDLED ERROR:', err);
-
-          return err.data;
-        });
-      } catch (error) {
-        console.log('................................', error);
-      }
+        return err.data;
+      });
 
       if (!data) {
         throw new Error(

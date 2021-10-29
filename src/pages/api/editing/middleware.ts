@@ -132,8 +132,6 @@ export class EditingRenderMiddleware {
       // https://nextjs.org/docs/advanced-features/preview-mode#previewdata-size-limits)
       const previewData = await this.editingDataService.setEditingData(editingData, serverUrl);
 
-      debug.experienceEditor('3333 - PREVIEW DATA:' + previewData);
-
       // Enable Next.js Preview Mode, passing our preview data (i.e. editingData cache key)
       res.setPreviewData(previewData);
 
@@ -144,8 +142,6 @@ export class EditingRenderMiddleware {
       // Note timestamp effectively disables caching the request in Axios (no amount of cache headers seemed to do it)
       const requestUrl = this.resolvePageUrl(serverUrl, editingData.path);
 
-      debug.experienceEditor('4444 REQUEST URL:' + requestUrl);
-
       debug.experienceEditor('fetching page route for %s', editingData.path);
       const pageRes = await this.dataFetcher
         .get<string>(`${requestUrl}?timestamp=${Date.now()}`, {
@@ -154,7 +150,7 @@ export class EditingRenderMiddleware {
           },
         })
         .catch((err) => {
-          console.log('=============HANDLE ERROR==============', err);
+          debug.experienceEditor('error while fetching data......', err);
           return err;
         });
 
@@ -186,24 +182,6 @@ export class EditingRenderMiddleware {
     try {
       return returnRes();
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      console.log(
-        'RESPONSE ERROR----',
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error as any).response.statusMessage,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error as any).response.status
-      );
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if (
-        (error as any).response.status === 404 ||
-        (error as any).response.status == 404 ||
-        (error as any).response.statusMessage === 'Not Found'
-      ) {
-        return returnRes();
-      }
-
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((error as any).response || (error as any).request) {
         // Axios error, which could mean the server or page URL isn't quite right, so provide a more helpful hint
