@@ -115,7 +115,7 @@ export class EditingRenderMiddleware {
       });
     }
 
-    try {
+    const returnRes = async () => {
       // Extract data from EE payload
       const editingData = extractEditingData(req);
 
@@ -176,6 +176,10 @@ export class EditingRenderMiddleware {
       // Return expected JSON result
       debug.experienceEditor('editing render middleware end: %o', { status: 200, body });
       res.status(200).json(body);
+    };
+
+    try {
+      return returnRes();
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.log(
@@ -192,9 +196,7 @@ export class EditingRenderMiddleware {
         (error as any).response.status == 404 ||
         (error as any).response.statusMessage === 'Not Found'
       ) {
-        return res.status(200).json({
-          html: `<html><body>${error}</body></html>`,
-        });
+        return returnRes();
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
