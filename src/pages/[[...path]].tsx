@@ -57,13 +57,13 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 
     return {
       paths,
-      fallback: 'blocking',
+      fallback: false,
     };
   }
 
   return {
     paths: [],
-    fallback: 'blocking',
+    fallback: false,
   };
 };
 
@@ -72,8 +72,6 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 // revalidation (or fallback) is enabled and a new request comes in.
 export const getStaticProps: GetStaticProps = async (context) => {
   const props = await sitecorePagePropsFactory.create(context);
-
-  console.log('----------------EXECUTE GET STATIC PROPS----------------', context);
 
   return {
     props,
