@@ -177,9 +177,17 @@ export class EditingRenderMiddleware {
       res.status(200).json(body);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      console.log('REQUEST ERROR----', (error as any).request);
+      console.log(
+        'REQUEST ERROR----',
+        (error as any).request.code,
+        (error as any).request.statusCode
+      );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      console.log('RESPONSE ERROR----', (error as any).response);
+      console.log(
+        'RESPONSE ERROR----',
+        (error as any).response.code,
+        (error as any).response.statusCode
+      );
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((error as any).response || (error as any).request) {
