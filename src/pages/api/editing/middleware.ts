@@ -177,16 +177,16 @@ export class EditingRenderMiddleware {
       res.status(200).json(body);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      console.log(
-        'RESPONSE ERROR----',
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error as any).response.statusMessage,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error as any).response.status
-      );
+      // console.log(
+      //   'RESPONSE ERROR----',
+      //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //   (error as any).response.statusMessage,
+      //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //   (error as any).response.status
+      // );
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((error as any).response.statusMessage === 'Not Found') {
+      if ((error as any).response.status === 404) {
         return res.status(200).json({
           html: `<html><body>${error}</body></html>`,
         });
