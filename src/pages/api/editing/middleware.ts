@@ -147,11 +147,16 @@ export class EditingRenderMiddleware {
       debug.experienceEditor('4444 REQUEST URL:' + requestUrl);
 
       debug.experienceEditor('fetching page route for %s', editingData.path);
-      const pageRes = await this.dataFetcher.get<string>(`${requestUrl}?timestamp=${Date.now()}`, {
-        headers: {
-          Cookie: cookies.join(';'),
-        },
-      });
+      const pageRes = await this.dataFetcher
+        .get<string>(`${requestUrl}?timestamp=${Date.now()}`, {
+          headers: {
+            Cookie: cookies.join(';'),
+          },
+        })
+        .catch((err) => {
+          console.log('=============HANDLE ERROR==============', err);
+          return err;
+        });
 
       debug.experienceEditor('5555' + pageRes);
       let html = pageRes.data;
