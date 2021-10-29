@@ -177,9 +177,9 @@ export class EditingRenderMiddleware {
       res.status(200).json(body);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      console.error('REQUEST ERROR----', (error as any).request);
+      console.log('REQUEST ERROR----', (error as any).request);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      console.error('RESPONSE ERROR----', (error as any).response);
+      console.log('RESPONSE ERROR----', (error as any).response);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((error as any).response || (error as any).request) {
