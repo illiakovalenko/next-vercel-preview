@@ -115,16 +115,12 @@ export class EditingRenderMiddleware {
       });
     }
 
-    const returnRes = async () => {
+    try {
       // Extract data from EE payload
       const editingData = extractEditingData(req);
 
-      debug.experienceEditor('1111 - EDITING DATA:' + editingData);
-
       // Resolve server URL
       const serverUrl = this.resolveServerUrl(req);
-
-      debug.experienceEditor('2222 - SERVER URL' + serverUrl);
 
       // Stash for use later on (i.e. within getStatic/ServerSideProps).
       // This ultimately gets stored on disk (using our EditingDataDiskCache) for compatibility with Vercel Serverless Functions.
@@ -141,20 +137,15 @@ export class EditingRenderMiddleware {
       // Make actual render request for page route, passing on preview cookies.
       // Note timestamp effectively disables caching the request in Axios (no amount of cache headers seemed to do it)
       const requestUrl = this.resolvePageUrl(serverUrl, editingData.path);
-
       debug.experienceEditor('fetching page route for %s', editingData.path);
-      const pageRes = await this.dataFetcher
-        .get<string>(`${requestUrl}?timestamp=${Date.now()}`, {
-          headers: {
-            Cookie: cookies.join(';'),
-          },
-        })
-        .catch((err) => {
-          debug.experienceEditor('error while fetching data......', err);
-          return err;
-        });
-
-      debug.experienceEditor('5555' + pageRes);
+      const pageRes = await this.dataFetcher.get<string>(`${requestUrl}?timestamp=${Date.now()}`, {
+        headers: {
+          Cookie: cookies.join(';'),
+        },
+      })
+      .catch(err => {
+        return err;
+      })
       let html = pageRes.data;
       if (!html || html.length === 0) {
         throw new Error(`Failed to render html for ${requestUrl}`);
@@ -164,25 +155,14 @@ export class EditingRenderMiddleware {
       // show correct placeholders, so save and refresh won't be needed after adding each rendering
       html = html.replace(new RegExp('phkey', 'g'), 'key');
 
-      // When SSG, Next will attempt to perform a router.replace on the client-side to inject the query string parms
-      // to the router state. See https://github.com/vercel/next.js/blob/v10.0.3/packages/next/client/index.tsx#L169.
-      // However, this doesn't really work since at this point we're in the editor and the location.search has nothing
-      // to do with the Next route/page we've rendered. Beyond the extraneous request, this can result in a 404 with
-      // certain route configurations (e.g. multiple catch-all routes).
-      // The following line will trick it into thinking we're SSR, thus avoiding any router.replace.
-      html = html.replace(STATIC_PROPS_ID, SERVER_PROPS_ID);
-
       const body = { html };
 
       // Return expected JSON result
       debug.experienceEditor('editing render middleware end: %o', { status: 200, body });
       res.status(200).json(body);
-    };
-
-    try {
-      return returnRes();
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // console.error(error);
+
       if ((error as any).response || (error as any).request) {
         // Axios error, which could mean the server or page URL isn't quite right, so provide a more helpful hint
         console.info(
@@ -193,7 +173,6 @@ export class EditingRenderMiddleware {
       res.status(500).json({
         html: `<html><body>${error}</body></html>`,
       });
-    }
   };
 
   /**
