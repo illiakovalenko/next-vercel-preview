@@ -147,12 +147,15 @@ export class EditingRenderMiddleware {
             },
           })
           .catch((err) => {
-            console.log(err, '------------------------------------------------------------');
+            console.log(
+              err.response,
+              '------------------------------------------------------------'
+            );
 
             return err;
           });
       } catch (error) {
-        console.log(error, '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+        console.log(error.response, '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
         pageRes = error;
       }
 
