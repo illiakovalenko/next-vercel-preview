@@ -145,14 +145,11 @@ export class EditingRenderMiddleware {
           },
         })
         .catch((err) => {
-          console.log(
-            err.response.status + '!!!!',
-            err.response.statusCode + '@@@@',
-            err.response.code + '####',
-            '------------------------------------------------------------'
-          );
+          if (err.response.status === 404) {
+            return err.response;
+          }
 
-          return err.response;
+          throw err;
         });
 
       let html = pageRes.data;
