@@ -146,7 +146,6 @@ export class EditingRenderMiddleware {
         })
         .catch((err) => {
           console.log(
-            err.response,
             err.response.status + '!!!!',
             err.response.statusCode + '@@@@',
             err.response.code + '####',
